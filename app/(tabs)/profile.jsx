@@ -1,11 +1,18 @@
+import { useAuthActions } from "@convex-dev/auth/react";
 import React from "react";
-import { Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import CustomButton from "../../components/CustomButton";
 
 const Profile = () => {
+  const { signOut } = useAuthActions();
   return (
-    <View>
-      <Text>Profile</Text>
-    </View>
+    <SafeAreaView className="flex-1 justify-center items-center">
+      <CustomButton
+        title="Sign out"
+        handlePress={() => void signOut()}
+        containerStyles="w-1/2 mt-7"
+      />
+    </SafeAreaView>
   );
 };
 

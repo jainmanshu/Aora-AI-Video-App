@@ -1,3 +1,4 @@
+import { useAuthActions } from "@convex-dev/auth/react";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
@@ -7,6 +8,7 @@ import FormField from "../../components/FormField";
 import { images } from "../../constants";
 
 const SignIn = () => {
+  const { signIn } = useAuthActions();
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -39,7 +41,13 @@ const SignIn = () => {
           />
           <CustomButton
             title="Sign In"
-            handlePress={() => {}}
+            handlePress={() => {
+              void signIn("password", {
+                email: form.email,
+                password: form.password,
+                flow: "signIn",
+              });
+            }}
             containerStyles="mt-7"
             isLoading={isSubmitting}
           />

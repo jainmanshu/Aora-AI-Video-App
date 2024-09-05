@@ -1,3 +1,4 @@
+import { useAuthActions } from "@convex-dev/auth/react";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
@@ -7,8 +8,8 @@ import FormField from "../../components/FormField";
 import { images } from "../../constants";
 
 const SignUp = () => {
+  const { signIn } = useAuthActions();
   const [form, setForm] = useState({
-    username: "",
     email: "",
     password: "",
   });
@@ -26,12 +27,6 @@ const SignUp = () => {
             Sign up to Aora!
           </Text>
           <FormField
-            title="Username"
-            value={form.username}
-            handleChangeText={(e) => setForm({ ...form, username: e })}
-            otherStyles="mt-10"
-          />
-          <FormField
             title="Email"
             value={form.email}
             handleChangeText={(e) => setForm({ ...form, email: e })}
@@ -46,7 +41,13 @@ const SignUp = () => {
           />
           <CustomButton
             title="Sign Up"
-            handlePress={() => {}}
+            handlePress={() => {
+              void signIn("password", {
+                email: form.email,
+                password: form.password,
+                flow: "signUp",
+              });
+            }}
             containerStyles="mt-7"
             isLoading={isSubmitting}
           />

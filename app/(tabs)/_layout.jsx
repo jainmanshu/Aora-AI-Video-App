@@ -1,3 +1,4 @@
+import { Authenticated } from "convex/react";
 import { Tabs } from "expo-router";
 import React from "react";
 import { Image, Text, View } from "react-native";
@@ -24,7 +25,7 @@ const TabIcon = ({ icon, color, name, focused }) => {
 
 const TabLayouts = () => {
   return (
-    <>
+    <Authenticated>
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "#FFA001",
@@ -99,7 +100,7 @@ const TabLayouts = () => {
           }}
         />
       </Tabs>
-    </>
+    </Authenticated>
   );
 };
 
