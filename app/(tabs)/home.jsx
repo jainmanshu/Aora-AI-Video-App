@@ -1,23 +1,34 @@
+import { useQuery } from "convex/react";
 import React, { useState } from "react";
 import { FlatList, Image, RefreshControl, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EmptyState from "../../components/EmptyState";
 import SearchInput from "../../components/SearchInput";
 import Trending from "../../components/Trending";
+import VideoCard from "../../components/VideoCard";
 import { images } from "../../constants";
+import { api } from "../../convex/_generated/api";
 
 const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
+  const posts = useQuery(api.videos.getVideos);
+
   const onRefresh = async () => {
     setRefreshing(true);
   };
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
-        keyExtractor={(item) => item.id}
+        data={posts}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <Text className="text-3xl text-white">{item.id}</Text>
+          <VideoCard
+            title={item.title}
+            creator="Test"
+            thumbnail={item.thumbnail}
+            avatar={images.profile}
+            video={item.video}
+          />
         )}
         ListHeaderComponent={() => (
           <View className="my-6 px-4 space-y-6">
@@ -41,7 +52,7 @@ const Home = () => {
               <Text className="text-gray-100 text-lg font-pregular mb-3">
                 Latest Video
               </Text>
-              <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }] ?? []} />
+              <Trending posts={posts ?? []} />
             </View>
           </View>
         )}
