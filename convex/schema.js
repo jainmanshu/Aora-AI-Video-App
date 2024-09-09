@@ -10,6 +10,8 @@ const schema = defineSchema({
     thumbnail: v.string(),
     prompt: v.string(),
     video: v.string(),
+  }).searchIndex("search_body", {
+    searchField: "title",
   }),
 });
 
