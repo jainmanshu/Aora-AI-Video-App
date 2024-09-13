@@ -70,6 +70,41 @@ export const insertData = mutation({
       prompt: args.prompt,
       video: args.video,
       creator: userId,
+      isLiked: false,
     });
+  },
+});
+
+export const likedVideo = mutation({
+  args: {
+    id: v.id("videos"),
+    isLiked: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new Error("Client is not authenticated!");
+    }
+    await ctx.db.patch(args.id, { isLiked: args.isLiked });
+  },
+});
+
+export const deleteVideo = mutation({
+  args: {
+    id: v.id("videos"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new Error("Client is not authenticated!");
+    }
+    // delete the respective storage as well
+    const { thumbnail, video } = await ctx.db.get(args.id);
+
+    await Promise.all([
+      ctx.db.delete(args.id),
+      ctx.storage.delete(thumbnail),
+      ctx.storage.delete(video),
+    ]);
   },
 });

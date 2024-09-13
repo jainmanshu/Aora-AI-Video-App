@@ -23,11 +23,13 @@ const Home = () => {
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <VideoCard
+            id={item._id}
             title={item.title}
             creator="Test"
             thumbnail={item.thumbnail}
             avatar={images.profile}
             video={item.video}
+            isLiked={item.isLiked}
           />
         )}
         ListHeaderComponent={() => (

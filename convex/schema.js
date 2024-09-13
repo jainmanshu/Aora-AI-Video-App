@@ -11,6 +11,7 @@ const schema = defineSchema({
     prompt: v.string(),
     video: v.id("_storage"),
     creator: v.id("users"),
+    isLiked: v.optional(v.boolean()),
   })
     .index("by_creator", ["creator"])
     .searchIndex("search_body", {

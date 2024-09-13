@@ -1,11 +1,40 @@
+import { useMutation } from "convex/react";
 import { ResizeMode, Video } from "expo-av";
 import { useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { icons } from "../constants";
+import { api } from "../convex/_generated/api";
 
-const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
+const VideoCard = ({
+  id,
+  title,
+  creator,
+  avatar,
+  thumbnail,
+  video,
+  isLiked = false,
+}) => {
+  const likedVideo = useMutation(api.videos.likedVideo);
+  const deleteVideo = useMutation(api.videos.deleteVideo);
+
   const [play, setPlay] = useState(false);
+
+  const handleLiked = async () => {
+    await likedVideo({ id: id, isLiked: !isLiked });
+  };
+
+  const handleDeleteAlert = () =>
+    Alert.alert(
+      "Delete Video",
+      `Are you sure, you want to delete this video?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        { text: "Delete", onPress: async () => await deleteVideo({ id: id }) },
+      ]
+    );
 
   return (
     <View className="flex flex-col items-center px-4 mb-14">
@@ -35,8 +64,25 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
           </View>
         </View>
 
-        <View className="pt-2">
-          <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
+        <View className="pt-2 flex-row gap-2">
+          <TouchableOpacity onPress={() => handleLiked()}>
+            <View>
+              <Image
+                source={isLiked ? icons.heartFilled : icons.heart}
+                className="w-5 h-5"
+                resizeMode="contain"
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDeleteAlert}>
+            <View>
+              <Image
+                source={icons.deleteIcon}
+                className="w-5 h-5"
+                resizeMode="contain"
+              />
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
 
