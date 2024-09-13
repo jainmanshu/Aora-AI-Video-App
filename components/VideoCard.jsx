@@ -43,7 +43,7 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
       {play ? (
         <Video
           source={{
-            uri: "https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+            uri: video,
           }}
           className="w-full h-60 rounded-xl mt-3"
           resizeMode={ResizeMode.CONTAIN}

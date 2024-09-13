@@ -1,5 +1,7 @@
+import { useMutation } from "convex/react";
 import { ResizeMode, Video } from "expo-av";
 import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
@@ -13,8 +15,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "../../components/CustomButton";
 import FormField from "../../components/FormField";
 import { icons } from "../../constants";
+import { api } from "../../convex/_generated/api";
 
 const Create = () => {
+  const generateUploadUrl = useMutation(api.videos.generateUploadUrl);
+  const insertData = useMutation(api.videos.insertData);
+
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     title: "",
@@ -38,17 +44,44 @@ const Create = () => {
         setForm({ ...form, thumbnail: result.assets[0] });
       }
       if (selectType === "video") {
-        setForm({ ...form, thumbnail: result.assets[0] });
+        setForm({ ...form, video: result.assets[0] });
       }
     }
   };
-  const submit = () => {
+  const submit = async () => {
     if (!form.prompt || !form.title || !form.thumbnail || !form.video) {
       return Alert.alert("Please fill all the field");
     }
     setUploading(true);
 
     try {
+      const imgUrl = await generateUploadUrl();
+      const videoUrl = await generateUploadUrl();
+
+      const thumbnailBlob = await (await fetch(form.thumbnail.uri)).blob();
+
+      const postThumbnail = await fetch(imgUrl, {
+        method: "POST",
+        headers: { "Content-Type": "image/jpeg" },
+        body: thumbnailBlob,
+      });
+      const { storageId: thumnailStoreId } = await postThumbnail.json();
+
+      const videoBlob = await (await fetch(form.video.uri)).blob();
+
+      const postVideo = await fetch(videoUrl, {
+        method: "POST",
+        headers: { "Content-Type": "video/mp4" },
+        body: videoBlob,
+      });
+
+      const { storageId: videoStoreId } = await postVideo.json();
+      await insertData({
+        title: form.title,
+        prompt: form.prompt,
+        thumbnail: thumnailStoreId,
+        video: videoStoreId,
+      });
       Alert.alert("Success", "Post uploaded successfully");
       router.push("/home");
     } catch (error) {

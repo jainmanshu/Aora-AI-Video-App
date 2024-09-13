@@ -7,12 +7,15 @@ const schema = defineSchema({
   // Your other tables...
   videos: defineTable({
     title: v.string(),
-    thumbnail: v.string(),
+    thumbnail: v.id("_storage"),
     prompt: v.string(),
-    video: v.string(),
-  }).searchIndex("search_body", {
-    searchField: "title",
-  }),
+    video: v.id("_storage"),
+    creator: v.id("users"),
+  })
+    .index("by_creator", ["creator"])
+    .searchIndex("search_body", {
+      searchField: "title",
+    }),
 });
 
 export default schema;

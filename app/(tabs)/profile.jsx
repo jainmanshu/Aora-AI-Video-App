@@ -11,7 +11,6 @@ import { api } from "../../convex/_generated/api";
 
 const Profile = () => {
   const auth = useConvexAuth();
-  console.log(auth);
   return (
     <SafeAreaView className="bg-primary h-full">
       {/* <FlatList
