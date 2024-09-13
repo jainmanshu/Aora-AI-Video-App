@@ -2,6 +2,7 @@ import { useMutation } from "convex/react";
 import { ResizeMode, Video } from "expo-av";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   Alert,
@@ -166,6 +167,7 @@ const Create = () => {
           isLoading={uploading}
         />
       </ScrollView>
+      <StatusBar backgroundColor="#161622" style="light" />
     </SafeAreaView>
   );
 };

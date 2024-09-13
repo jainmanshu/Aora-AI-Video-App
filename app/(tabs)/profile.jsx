@@ -1,6 +1,7 @@
 import { useAuthActions, useAuthToken } from "@convex-dev/auth/react";
 import { useConvexAuth, useQuery } from "convex/react";
 import { useLocalSearchParams } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EmptyState from "../../components/EmptyState";
@@ -50,6 +51,7 @@ const Profile = () => {
           )
         }
       /> */}
+      <StatusBar backgroundColor="#161622" style="light" />
     </SafeAreaView>
   );
 };
