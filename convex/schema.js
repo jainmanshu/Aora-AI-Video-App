@@ -15,6 +15,7 @@ const schema = defineSchema({
     .index("by_creator", ["creator"])
     .searchIndex("search_body", {
       searchField: "title",
+      filterFields: ["creator"],
     }),
 });
 

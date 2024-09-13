@@ -11,12 +11,11 @@ import { api } from "../../convex/_generated/api";
 const Search = () => {
   const { query } = useLocalSearchParams();
   const posts = useQuery(api.videos.searchVideos, { query_field: query }) ?? [];
-
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.$id}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <VideoCard
             title={item.title}

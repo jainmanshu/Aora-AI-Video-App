@@ -11,6 +11,7 @@ export const getVideos = query({
     const videos = await ctx.db
       .query("videos")
       .withIndex("by_creator", (q) => q.eq("creator", userId))
+      .order("desc")
       .collect();
     return Promise.all(
       videos.map(async (video) => ({
@@ -31,12 +32,19 @@ export const searchVideos = query({
     }
     const res = await ctx.db
       .query("videos")
-      .withIndex("by_creator", (q) => q.eq("creator", userId))
       .withSearchIndex("search_body", (q) =>
-        q.search("title", args.query_field)
+        q.search("title", args.query_field).eq("creator", userId)
       )
       .take(10);
-    return res || [];
+    return (
+      Promise.all(
+        res.map(async (video) => ({
+          ...video,
+          video: await ctx.storage.getUrl(video.video),
+          thumbnail: await ctx.storage.getUrl(video.thumbnail),
+        }))
+      ) || []
+    );
   },
 });
 
