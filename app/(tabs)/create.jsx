@@ -48,6 +48,22 @@ const Create = () => {
       }
     }
   };
+
+  const uploadFile = async (fileType, uri) => {
+    const getUploadUrl = await generateUploadUrl();
+    const getUploadBlob = await (await fetch(uri)).blob();
+    const storeBlob = await fetch(getUploadUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": fileType === "thumbnail" ? "image/jpeg" : "video/mp4",
+      },
+      body: getUploadBlob,
+    });
+
+    const { storageId } = await storeBlob.json();
+    return storageId;
+  };
+
   const submit = async () => {
     if (!form.prompt || !form.title || !form.thumbnail || !form.video) {
       return Alert.alert("Please fill all the field");
@@ -55,27 +71,11 @@ const Create = () => {
     setUploading(true);
 
     try {
-      const imgUrl = await generateUploadUrl();
-      const videoUrl = await generateUploadUrl();
+      const [thumnailStoreId, videoStoreId] = await Promise.all([
+        uploadFile("thumbnail", form.thumbnail.uri),
+        uploadFile("video", form.video.uri),
+      ]);
 
-      const thumbnailBlob = await (await fetch(form.thumbnail.uri)).blob();
-
-      const postThumbnail = await fetch(imgUrl, {
-        method: "POST",
-        headers: { "Content-Type": "image/jpeg" },
-        body: thumbnailBlob,
-      });
-      const { storageId: thumnailStoreId } = await postThumbnail.json();
-
-      const videoBlob = await (await fetch(form.video.uri)).blob();
-
-      const postVideo = await fetch(videoUrl, {
-        method: "POST",
-        headers: { "Content-Type": "video/mp4" },
-        body: videoBlob,
-      });
-
-      const { storageId: videoStoreId } = await postVideo.json();
       await insertData({
         title: form.title,
         prompt: form.prompt,
