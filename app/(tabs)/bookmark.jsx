@@ -11,7 +11,6 @@ import { api } from "../../convex/_generated/api";
 const Bookmark = () => {
   const [refreshing, setRefreshing] = useState(false);
   const posts = useQuery(api.videos.getLikedVideos);
-  console.log(posts);
 
   const onRefresh = async () => {
     setRefreshing(true);
