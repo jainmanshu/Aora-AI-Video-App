@@ -14,6 +14,7 @@ const schema = defineSchema({
     isLiked: v.optional(v.boolean()),
   })
     .index("by_creator", ["creator"])
+    .index("by_creator_liked", ["creator", "isLiked"])
     .searchIndex("search_body", {
       searchField: "title",
       filterFields: ["creator"],

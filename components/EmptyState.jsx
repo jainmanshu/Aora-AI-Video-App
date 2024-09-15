@@ -4,7 +4,7 @@ import { Image, Text, View } from "react-native";
 import { images } from "../constants";
 import CustomButton from "./CustomButton";
 
-const EmptyState = ({ title, subtitle }) => {
+const EmptyState = ({ title, subtitle, disableButton = false }) => {
   return (
     <View className="justify-center items-center px-4">
       <Image
@@ -14,11 +14,13 @@ const EmptyState = ({ title, subtitle }) => {
       />
       <Text className="text-xl font-psemibold text-white mt-2">{title}</Text>
       <Text className="font-pmedium text-sm text-gray-100">{subtitle}</Text>
-      <CustomButton
-        title="Create Video"
-        handlePress={() => router.push("/create")}
-        containerStyles="w-full my-5"
-      />
+      {!disableButton && (
+        <CustomButton
+          title="Create Video"
+          handlePress={() => router.push("/create")}
+          containerStyles="w-full my-5"
+        />
+      )}
     </View>
   );
 };

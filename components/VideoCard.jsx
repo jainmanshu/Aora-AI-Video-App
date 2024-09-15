@@ -13,6 +13,7 @@ const VideoCard = ({
   isLiked = false,
   handleLiked,
   handleDelete,
+  actionDisabled = false,
 }) => {
   const [play, setPlay] = useState(false);
 
@@ -56,31 +57,32 @@ const VideoCard = ({
             </Text>
           </View>
         </View>
-
-        <View className="pt-2 flex-row gap-2">
-          <TouchableOpacity
-            onPress={async () =>
-              await handleLiked({ id: id, isLiked: !isLiked })
-            }
-          >
-            <View>
-              <Image
-                source={isLiked ? icons.heartFilled : icons.heart}
-                className="w-5 h-5"
-                resizeMode="contain"
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleDeleteAlert}>
-            <View>
-              <Image
-                source={icons.deleteIcon}
-                className="w-5 h-5"
-                resizeMode="contain"
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
+        {!actionDisabled && (
+          <View className="pt-2 flex-row gap-2">
+            <TouchableOpacity
+              onPress={async () =>
+                await handleLiked({ id: id, isLiked: !isLiked })
+              }
+            >
+              <View>
+                <Image
+                  source={isLiked ? icons.heartFilled : icons.heart}
+                  className="w-5 h-5"
+                  resizeMode="contain"
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDeleteAlert}>
+              <View>
+                <Image
+                  source={icons.deleteIcon}
+                  className="w-5 h-5"
+                  resizeMode="contain"
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
 
       {play ? (

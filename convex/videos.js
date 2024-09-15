@@ -23,6 +23,28 @@ export const getVideos = query({
   },
 });
 
+export const getLikedVideos = query({
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new Error("Client is not authenticated!");
+    }
+    const videos = await ctx.db
+      .query("videos")
+      .withIndex("by_creator_liked", (q) =>
+        q.eq("creator", userId).eq("isLiked", true)
+      )
+      .collect();
+    return Promise.all(
+      videos.map(async (video) => ({
+        ...video,
+        video: await ctx.storage.getUrl(video.video),
+        thumbnail: await ctx.storage.getUrl(video.thumbnail),
+      }))
+    );
+  },
+});
+
 export const searchVideos = query({
   args: { query_field: v.string() },
   handler: async (ctx, args) => {
