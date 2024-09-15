@@ -1,4 +1,4 @@
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { FlatList, Image, RefreshControl, Text, View } from "react-native";
@@ -13,6 +13,9 @@ import { api } from "../../convex/_generated/api";
 const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
   const posts = useQuery(api.videos.getVideos);
+
+  const handleLiked = useMutation(api.videos.likedVideo);
+  const handleDelete = useMutation(api.videos.deleteVideo);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -31,6 +34,8 @@ const Home = () => {
             avatar={images.profile}
             video={item.video}
             isLiked={item.isLiked}
+            handleLiked={handleLiked}
+            handleDelete={handleDelete}
           />
         )}
         ListHeaderComponent={() => (

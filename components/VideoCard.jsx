@@ -1,9 +1,7 @@
-import { useMutation } from "convex/react";
 import { ResizeMode, Video } from "expo-av";
 import { useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { icons } from "../constants";
-import { api } from "../convex/_generated/api";
 
 const VideoCard = ({
   id,
@@ -13,15 +11,10 @@ const VideoCard = ({
   thumbnail,
   video,
   isLiked = false,
+  handleLiked,
+  handleDelete,
 }) => {
-  const likedVideo = useMutation(api.videos.likedVideo);
-  const deleteVideo = useMutation(api.videos.deleteVideo);
-
   const [play, setPlay] = useState(false);
-
-  const handleLiked = async () => {
-    await likedVideo({ id: id, isLiked: !isLiked });
-  };
 
   const handleDeleteAlert = () =>
     Alert.alert(
@@ -32,7 +25,7 @@ const VideoCard = ({
           text: "Cancel",
           style: "cancel",
         },
-        { text: "Delete", onPress: async () => await deleteVideo({ id: id }) },
+        { text: "Delete", onPress: async () => await handleDelete({ id: id }) },
       ]
     );
 
@@ -65,7 +58,11 @@ const VideoCard = ({
         </View>
 
         <View className="pt-2 flex-row gap-2">
-          <TouchableOpacity onPress={() => handleLiked()}>
+          <TouchableOpacity
+            onPress={async () =>
+              await handleLiked({ id: id, isLiked: !isLiked })
+            }
+          >
             <View>
               <Image
                 source={isLiked ? icons.heartFilled : icons.heart}
