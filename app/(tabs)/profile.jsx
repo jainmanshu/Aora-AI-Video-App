@@ -1,5 +1,6 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useMutation, useQuery } from "convex/react";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
@@ -33,12 +34,17 @@ const Profile = () => {
     }
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    router.replace("/sign-in");
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View className="w-full flex justify-center items-center mt-3 mb-6 px-4">
           <TouchableOpacity
-            onPress={signOut}
+            onPress={handleSignOut}
             className="flex w-full items-end mb-10"
           >
             <Image

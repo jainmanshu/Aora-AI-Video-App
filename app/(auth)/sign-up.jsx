@@ -1,5 +1,5 @@
 import { useAuthActions } from "@convex-dev/auth/react";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,6 +14,23 @@ const SignUp = () => {
     password: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSignUp = async () => {
+    setIsSubmitting(true);
+    try {
+      await signIn("password", {
+        email: form.email,
+        password: form.password,
+        flow: "signUp",
+      });
+      router.replace("/home");
+    } catch (error) {
+      console.error("Error signing up:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -41,13 +58,7 @@ const SignUp = () => {
           />
           <CustomButton
             title="Sign Up"
-            handlePress={() => {
-              void signIn("password", {
-                email: form.email,
-                password: form.password,
-                flow: "signUp",
-              });
-            }}
+            handlePress={handleSignUp}
             containerStyles="mt-7"
             isLoading={isSubmitting}
           />

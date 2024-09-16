@@ -11,6 +11,7 @@ import { images } from "../../constants";
 import { api } from "../../convex/_generated/api";
 
 const Home = () => {
+  const user = useQuery(api.users.getUserInfo);
   const [refreshing, setRefreshing] = useState(false);
   const posts = useQuery(api.videos.getVideos);
 
@@ -29,7 +30,7 @@ const Home = () => {
           <VideoCard
             id={item._id}
             title={item.title}
-            creator="Test"
+            creator={user?.name}
             thumbnail={item.thumbnail}
             avatar={images.profile}
             video={item.video}

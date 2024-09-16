@@ -2,12 +2,12 @@ import { ResizeMode, Video } from "expo-av";
 import { useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { icons } from "../constants";
+import Avatar from "./Avatar";
 
 const VideoCard = ({
   id,
   title,
   creator,
-  avatar,
   thumbnail,
   video,
   isLiked = false,
@@ -34,12 +34,8 @@ const VideoCard = ({
     <View className="flex flex-col items-center px-4 mb-14">
       <View className="flex flex-row gap-3 items-start">
         <View className="flex justify-center items-center flex-row flex-1">
-          <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
-            <Image
-              source={avatar}
-              className="w-full h-full rounded-lg"
-              resizeMode="cover"
-            />
+          <View className="w-[46px] h-[46px] rounded-lg border flex justify-center items-center p-0.5">
+            <Avatar name={creator} size="md" />
           </View>
 
           <View className="flex justify-center flex-1 ml-3 gap-y-1">
